@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epicure Intelligence Suite | Executive Operations Matrix</title>
+    <style>
+        :root {
+            --bg0: #05070c;
+            --bg1: #0b1120;
+            --bg2: #121a2b;
+            --card: rgba(18, 26, 43, 0.82);
+            --card2: rgba(15, 21, 34, 0.9);
+            --line: rgba(212, 175, 55, 0.16);
+            --gold: #d4af37;
+            --gold2: #f4e2a1;
+            --emerald: #22c55e;
+            --crimson: #ef4444;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --soft: #64748b;
+            --radius: 18px;
+            --radius-sm: 12px;
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+            --glass: blur(16px);
+            --anim: all 0.28s cubic-bezier(.2, .8, .2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 10% 10%, rgba(212, 175, 55, 0.12), transparent 25%),
+                radial-gradient(circle at 90% 15%, rgba(34, 197, 94, 0.08), transparent 22%),
+                linear-gradient(180deg, var(--bg0), var(--bg1) 38%, #060912);
+            overflow-x: hidden;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            padding: 1.5rem;
+            border-right: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 18%), rgba(8, 12, 20, 0.92);
+            -webkit-backdrop-filter: var(--glass);
+            backdrop-filter: var(--glass);
+        }
+
+        .brand {
+            padding: 1rem 0 1.2rem;
+            border-bottom: 1px solid var(--line);
+            margin-bottom: 1.2rem;
+            text-align: center;
+        }
+
+        .brand h1 {
+            font-family: Georgia, serif;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            font-weight: 500;
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand p {
+            margin-top: .35rem;
+            font-size: .72rem;
+            text-transform: uppercase;
+            color: var(--soft);
+            letter-spacing: 2px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: .55rem;
+        }
+
+        .nav button {
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--muted);
+            padding: .95rem 1rem;
+            border-radius: 14px;
+            text-align: left;
+            cursor: pointer;
+            font-weight: 700;
+            letter-spacing: .2px;
+            transition: var(--anim);
+        }
+
+        .nav button:hover,
+        .nav button.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.035);
+            border-color: rgba(212, 175, 55, 0.25);
+            transform: translateX(4px);
+            box-shadow: inset 0 0 24px rgba(212, 175, 55, 0.05);
+        }
+
+        .content {
+            padding: 2rem;
+            max-width: 1600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: center;
+            padding-bottom: 1.2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--line);
+            flex-wrap: wrap;
+        }
+
+        .heading h2 {
+            font-family: Georgia, serif;
+            font-size: clamp(1.8rem, 2.5vw, 2.6rem);
+            font-weight: 500;
+        }
+
+        .heading p {
+            color: var(--muted);
+            margin-top: .35rem;
+            font-size: .95rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: .75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .badge {
+            padding: .65rem 1rem;
+            border-radius: 999px;
+            font-size: .75rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: rgba(34, 197, 94, 0.12);
+            border: 1px solid rgba(34, 197, 94, 0.35);
+            color: var(--emerald);
+        }
+
+        .btn {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text);
+            padding: .8rem 1rem;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: var(--anim);
+            font-weight: 700;
+        }
+
+        .btn:hover {
+            background: rgba(212, 175, 55, 0.08);
+            border-color: rgba(212, 175, 55, 0.28);
+        }
+
+        .panel {
+            display: none;
+            animation: fade .35s ease;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .kpi {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 30%), var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            padding: 1.2rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi::before {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 4px;
+            background: var(--gold);
+        }
+
+        .kpi label {
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: 1.4px;
+            color: var(--muted);
+        }
+
+        .kpi h3 {
+            margin-top: .45rem;
+            font-family: Georgia, serif;
+            font-weight: 500;
+            font-size: 1.9rem;
+        }
+
+        .kpi small {
+            color: var(--soft);
+            display: inline-block;
+            margin-top: .25rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            gap: 1.5rem;
+        }
+
+        .card,
+        .table-card,
+        .control-card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 26%), var(--card2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            -webkit-backdrop-filter: var(--glass);
+            backdrop-filter: var(--glass);
+        }
+
+        .card {
+            padding: 1.2rem;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: .8rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .input,
+        select {
+            background: rgba(20, 28, 44, 0.95);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: .8rem .95rem;
+            outline: none;
+            transition: var(--anim);
+        }
+
+        .input:focus,
+        select:focus {
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.08);
+        }
+
+        .input {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .ledger {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 760px;
+            overflow: auto;
+            padding-right: .25rem;
+        }
+
+        .item {
+            display: grid;
+            grid-template-columns: 136px 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--anim);
+        }
+
+        .item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(212, 175, 55, 0.22);
+        }
+
+        .thumb {
+            width: 136px;
+            height: 136px;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: var(--anim);
+        }
+
+        .item:hover .thumb img {
+            transform: scale(1.05);
+        }
+
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .tag {
+            display: inline-block;
+            color: var(--gold2);
+            font-size: .7rem;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
+
+        .item h4 {
+            font-family: Georgia, serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            margin-top: .2rem;
+        }
+
+        .item p {
+            margin-top: .5rem;
+            color: var(--muted);
+            line-height: 1.5;
+            font-size: .9rem;
+        }
+
+        .pill {
+            display: flex;
+            gap: .9rem;
+            flex-wrap: wrap;
+            margin-top: .9rem;
+            padding: .7rem .8rem;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.22);
+            width: fit-content;
+        }
+
+        .pill span {
+            color: var(--muted);
+            font-size: .82rem;
+        }
+
+        .pill strong {
+            color: #fff;
+        }
+
+        .sidebox {
+            padding: 1.2rem;
+            position: sticky;
+            top: 1.2rem;
+        }
+
+        .sidebox h3,
+        .section-title {
+            font-family: Georgia, serif;
+            font-weight: 500;
+            font-size: 1.2rem;
+            margin-bottom: .35rem;
+        }
+
+        .sidebox p,
+        .subtext {
+            color: var(--muted);
+            font-size: .9rem;
+            line-height: 1.5;
+        }
+
+        .tickers {
+            display: flex;
+            flex-direction: column;
+            gap: .8rem;
+            margin-top: 1rem;
+        }
+
+        .ticker {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: .7rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: .88rem;
+        }
+
+        .table-card {
+            overflow: hidden;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .88rem;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            text-align: left;
+        }
+
+        .table th {
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: .72rem;
+            background: rgba(0, 0, 0, 0.18);
+        }
+
+        .status {
+            padding: .3rem .6rem;
+            border-radius: 999px;
+            font-size: .72rem;
+            font-weight: 800;
+        }
+
+        .ok {
+            background: rgba(34, 197, 94, 0.14);
+            color: var(--emerald);
+        }
+
+        .warn {
+            background: rgba(212, 175, 55, 0.14);
+            color: var(--gold2);
+        }
+
+        .matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        .mcard {
+            padding: 1.2rem;
+            border-radius: var(--radius);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 34%), var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .mcard h4 {
+            font-family: Georgia, serif;
+            font-size: 1.15rem;
+            font-weight: 500;
+        }
+
+        .mval {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--emerald);
+            margin-top: .6rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+
+        .bar {
+            width: 100%;
+            height: 7px;
+            margin-top: 1rem;
+            border-radius: 999px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .bar>div {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--emerald));
+        }
+
+        .empty {
+            padding: 2rem;
+            text-align: center;
+            color: var(--muted);
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .toolbar--top {
+            margin-top: 1rem;
+        }
+
+        .card--mb {
+            margin-bottom: 1rem;
+        }
+
+        .yield-projection {
+            color: var(--gold2);
+            font-weight: 800;
+        }
+
+        .supply-ref {
+            font-family: ui-monospace, monospace;
+            color: var(--gold2);
+        }
+
+        .mcard-label {
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted);
+        }
+
+        .pill-margin {
+            color: var(--emerald);
+        }
+
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.18);
+            border-radius: 999px;
+        }
+
+        @media (max-width: 1100px) {
+            .app {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                height: auto;
+                border-right: 0;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .grid,
+            .kpis {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .sidebox {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .content {
+                padding: 1rem;
+            }
+
+            .grid,
+            .kpis {
+                grid-template-columns: 1fr;
+            }
+
+            .item {
+                grid-template-columns: 1fr;
+            }
+
+            .thumb {
+                width: 100%;
+                height: 200px;
+            }
+
+            .meta {
+                flex-direction: column;
+            }
+
+            .table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <br><br>
+                <h1><strong><big><big><big><big><big><big>Epicure Suite</big></big></big></big></big></big></strong></h1>
+                <p><big>Executive Intelligence Layer</big></p>
+
+                <br><br><br>
+            </div>
+
+            <div class="nav">
+                <button class="active" id="nav-dash" onclick="switchView('dash')">Master Dashboard</button>
+                <button id="nav-yield" onclick="switchView('yield')">Yield Engine</button>
+                <button id="nav-supply" onclick="switchView('supply')">Supply Chain</button>
+                <button id="nav-margin" onclick="switchView('margin')">Margin Lab</button>
+            </div>
+        </aside>
+
+        <main class="content">
+            <header class="topbar">
+                <div class="heading">
+                    <h2 id="pageTitle">Master Operational Ledger</h2>
+                    <p id="pageDesc">Live enterprise-grade analysis of culinary assets and financial performance.</p>
+                </div>
+                <div class="actions">
+                    <button class="btn" onclick="refreshView()">Refresh</button>
+                    <div class="badge" id="statusBadge">SYSTEM ONLINE</div>
+                </div>
+            </header>
+
+            <section id="dash" class="panel active">
+                <div class="kpis">
+                    <div class="kpi">
+                        <label>Total Assets</label>
+                        <h3>100</h3>
+                        <small>Cataloged profiles</small>
+                    </div>
+                    <div class="kpi">
+                        <label>Regions</label>
+                        <h3>5</h3>
+                        <small>Geographic clusters</small>
+                    </div>
+                    <div class="kpi">
+                        <label>Avg Margin</label>
+                        <h3 id="avgMargin">74.5%</h3>
+                        <small>Weighted profitability</small>
+                    </div>
+                    <div class="kpi">
+                        <label>Runtime</label>
+                        <h3 id="clock">--:--:--</h3>
+                        <small>System clock</small>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <div class="toolbar">
+                            <input id="search" class="input" type="text" placeholder="Search by title or description..."
+                                oninput="filterLedger()">
+                            <select id="region" aria-label="Filter by region" onchange="filterLedger()">
+                                <option value="ALL">All Regions</option>
+                                <option value="Asian">Asian</option>
+                                <option value="European">European</option>
+                                <option value="Americas">Americas</option>
+                                <option value="Middle East & Africa">Middle East & Africa</option>
+                            </select>
+                        </div>
+                        <div id="ledger" class="ledger"></div>
+                    </div>
+
+                    <div class="card sidebox">
+                        <h3>Live Resource Delta Index</h3>
+                        <p>Real-time operational drift across supply channels and pricing clusters.</p>
+                        <div class="tickers" id="tickers"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="yield" class="panel">
+                <div class="control-card card">
+                    <h3 class="section-title">Dynamic Batch Volumetric Scaler</h3>
+                    <p class="subtext">Use the controls below to recalculate enterprise-level batch projections.</p>
+
+                    <div class="toolbar toolbar--top">
+                        <input id="covers" class="input" type="range" min="10" max="1000" value="120"
+                            oninput="calcYield()">
+                        <input id="waste" class="input" type="range" min="0" max="25" value="6" oninput="calcYield()">
+                    </div>
+
+                    <div class="toolbar">
+                        <div class="status warn">COVERS: <span id="coversLabel">120</span></div>
+                        <div class="status ok">MARGIN BUFFER: <span id="wasteLabel">6%</span></div>
+                    </div>
+
+                    <div class="table-card">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Asset</th>
+                                    <th>Region</th>
+                                    <th>Base Cost</th>
+                                    <th>Scaled Projection</th>
+                                </tr>
+                            </thead>
+                            <tbody id="yieldOut"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="supply" class="panel">
+                <div class="table-card">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tracking Ref</th>
+                                <th>Asset</th>
+                                <th>Node</th>
+                                <th>Status</th>
+                                <th>Variance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="supplyOut"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="margin" class="panel">
+                <div class="card card--mb">
+                    <h3 class="section-title">Gross Margin Optimization Matrix</h3>
+                    <p class="subtext">Sorted from highest to lowest profitability using price-versus-cost analysis.</p>
+                </div>
+                <div id="matrix" class="matrix"></div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const pool = [
+            "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400&q=80",
+            "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=400&q=80",
+            "https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=400&q=80",
+            "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80",
+            "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80",
+            "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80",
+            "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+            "https://images.unsplash.com/photo-1608897013039-887f21d8c804?auto=format&fit=crop&w=400&q=80",
+            "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=400&q=80",
+            
+        ];
+
+        const data = [
+            { id: 1, title: "Ramen", region: "Asian", cost: 4.50, price: 18.00, desc: "Noodles in savory miso, soy, or rich pork bone broth, layered with chashu pork, soft-boiled eggs, and scallions." },
+            { id: 2, title: "Sushi", region: "Asian", cost: 6.00, price: 26.00, desc: "Premium vinegared rice paired with seafood, vegetables, and toasted nori wraps." },
+            { id: 3, title: "Tempura", region: "Asian", cost: 5.20, price: 21.00, desc: "Lightly battered seafood and seasonal vegetables served with dipping sauce." },
+            { id: 4, title: "Pad Thai", region: "Asian", cost: 3.80, price: 16.50, desc: "Stir-fried rice noodles with shrimp, tofu, tamarind, peanuts, and sprouts." },
+            { id: 5, title: "Green Curry", region: "Asian", cost: 4.10, price: 17.90, desc: "Aromatic coconut milk curry with green chili paste and chicken." },
+            { id: 6, title: "Tacos al Pastor", region: "Americas", cost: 2.50, price: 14.00, desc: "Marinated pork over corn tortillas with grilled pineapple." },
+            { id: 7, title: "Chiles en Nogada", region: "Americas", cost: 6.50, price: 28.50, desc: "Poblano chiles with fruit-meat filling and walnut cream." },
+            { id: 8, title: "Margherita Pizza", region: "European", cost: 3.00, price: 16.00, desc: "Tomato, mozzarella, and basil on a Neapolitan crust." },
+            { id: 9, title: "Pasta Carbonara", region: "European", cost: 3.50, price: 19.50, desc: "Spaghetti with egg yolks, guanciale, and Pecorino Romano." },
+            { id: 10, title: "Lasagna", region: "European", cost: 5.00, price: 22.00, desc: "Layered pasta with ragù, béchamel, and cheese." },
+            { id: 11, title: "Coq au Vin", region: "European", cost: 7.50, price: 34.00, desc: "Chicken braised in red wine with onions and lardons." },
+            { id: 12, title: "Ratatouille", region: "European", cost: 3.20, price: 15.50, desc: "Baked vegetable medley with tomato base." },
+            { id: 13, title: "Tarte Tatin", region: "European", cost: 2.80, price: 13.00, desc: "Upside-down caramelized apple tart." },
+            { id: 14, title: "Pho", region: "Asian", cost: 3.90, price: 17.00, desc: "Beef bone broth with noodles, herbs, and brisket." },
+            { id: 15, title: "Banh Mi", region: "Asian", cost: 2.20, price: 11.50, desc: "Crisp baguette with pâté, pork belly, and pickled daikon." },
+            { id: 16, title: "Chicken Tikka Masala", region: "Asian", cost: 4.80, price: 21.00, desc: "Spiced chicken in creamy tomato gravy." },
+            { id: 17, title: "Butter Chicken", region: "Asian", cost: 4.90, price: 21.50, desc: "Tandoori chicken in smooth butter-rich sauce." },
+            { id: 18, title: "Biryani", region: "Asian", cost: 5.50, price: 24.00, desc: "Layered saffron rice with marinated meat and onions." },
+            { id: 19, title: "Masala Dosa", region: "Asian", cost: 1.90, price: 12.50, desc: "Thin fermented crepe wrapped around spiced potato filling." },
+            { id: 20, title: "Chole Bhature", region: "Asian", cost: 2.10, price: 13.00, desc: "Chickpea curry with fried bread." },
+            { id: 21, title: "Dal Makhani", region: "Asian", cost: 2.40, price: 14.50, desc: "Slow-cooked black lentils finished with cream and butter." },
+            { id: 22, title: "Palak Paneer", region: "Asian", cost: 3.10, price: 16.50, desc: "Paneer cubes in spinach gravy." },
+            { id: 23, title: "Aloo Gobi", region: "Asian", cost: 1.80, price: 11.90, desc: "Potato and cauliflower stir-fry." },
+            { id: 24, title: "Pav Bhaji", region: "Asian", cost: 2.00, price: 12.00, desc: "Spiced mashed vegetables served with buttered pav." },
+            { id: 25, title: "Vada Pav", region: "Asian", cost: 1.10, price: 8.00, desc: "Fried potato fritter sandwich with chutney." },
+            { id: 26, title: "Tandoori Chicken", region: "Asian", cost: 4.20, price: 19.90, desc: "Yogurt-marinated chicken roasted in a tandoor." },
+            { id: 27, title: "Amritsari Kulcha", region: "Asian", cost: 1.70, price: 11.00, desc: "Stuffed flatbread baked crisp in a clay oven." },
+            { id: 28, title: "Hakka Noodles", region: "Asian", cost: 2.30, price: 14.00, desc: "Wok-tossed noodles with vegetables and soy." },
+            { id: 29, title: "Gobi Manchurian", region: "Asian", cost: 2.00, price: 13.50, desc: "Crispy cauliflower in a spicy Indo-Chinese glaze." },
+            { id: 30, title: "Paneer Butter Masala", region: "Asian", cost: 3.40, price: 18.00, desc: "Paneer in rich cashew-tomato gravy." },
+            { id: 31, title: "Shahi Tukra", region: "Asian", cost: 1.50, price: 9.50, desc: "Ghee-fried bread soaked in saffron milk syrup." },
+            { id: 32, title: "Jalebi", region: "Asian", cost: 1.20, price: 8.50, desc: "Crisp spirals soaked in sugar syrup." },
+            { id: 33, title: "Kadhi Pakora", region: "Asian", cost: 1.90, price: 12.00, desc: "Yogurt-based curry with gram flour fritters." },
+            { id: 34, title: "Bisi Bele Bath", region: "Asian", cost: 2.20, price: 13.50, desc: "Rice and lentils cooked with tamarind and spice blend." },
+            { id: 35, title: "Sambar", region: "Asian", cost: 1.40, price: 9.00, desc: "Tangy lentil-vegetable stew." },
+            { id: 36, title: "Rasam", region: "Asian", cost: 1.00, price: 7.50, desc: "Peppery tamarind soup." },
+            { id: 37, title: "Idli Sambhar", region: "Asian", cost: 1.30, price: 9.90, desc: "Steamed rice cakes served with sambar." },
+            { id: 38, title: "Vermicelli Kheer", region: "Asian", cost: 1.60, price: 10.00, desc: "Sweet milk dessert with toasted vermicelli." },
+            { id: 39, title: "Pani Puri", region: "Asian", cost: 1.10, price: 9.00, desc: "Crisp shells filled with potato and spiced water." },
+            { id: 40, title: "Misal Pav", region: "Asian", cost: 1.80, price: 11.50, desc: "Spiced sprout curry with crunchy toppings." },
+            { id: 41, title: "Tamatar Chaat", region: "Asian", cost: 1.50, price: 10.00, desc: "Charred tomato street snack." },
+            { id: 42, title: "Kaju Katli", region: "Asian", cost: 3.00, price: 22.00, desc: "Diamond-cut cashew fudge." },
+            { id: 43, title: "Nihari", region: "Middle East & Africa", cost: 5.00, price: 23.50, desc: "Slow-cooked beef shank stew." },
+            { id: 44, title: "Bhindi Masala", region: "Asian", cost: 1.70, price: 12.50, desc: "Pan-fried okra with spices." },
+            { id: 45, title: "Dhokla", region: "Asian", cost: 1.20, price: 8.90, desc: "Steamed savory gram flour cake." },
+            { id: 46, title: "Aloo Paratha", region: "Asian", cost: 1.40, price: 10.50, desc: "Stuffed potato flatbread." },
+            { id: 47, title: "Rajma", region: "Asian", cost: 1.90, price: 13.00, desc: "Kidney beans in spiced gravy." },
+            { id: 48, title: "Litti Chokha", region: "Asian", cost: 2.10, price: 14.00, desc: "Stuffed wheat balls with smoky mash." },
+            { id: 49, title: "Makki ki Roti with Sarson ka Saag", region: "Asian", cost: 2.30, price: 16.00, desc: "Corn flatbread with mustard greens." },
+            { id: 50, title: "Poha", region: "Asian", cost: 0.95, price: 7.00, desc: "Flattened rice with turmeric and peanuts." },
+            { id: 51, title: "Pulled Pork", region: "Americas", cost: 5.50, price: 21.00, desc: "Slow-smoked shredded pork with barbecue sauce." },
+            { id: 52, title: "Macaroni and Cheese", region: "Americas", cost: 2.80, price: 14.50, desc: "Creamy cheese sauce over pasta." },
+            { id: 53, title: "Deviled Eggs", region: "Americas", cost: 1.20, price: 9.00, desc: "Stuffed egg halves with mustard filling." },
+            { id: 54, title: "Banana Pudding", region: "Americas", cost: 2.40, price: 12.00, desc: "Layered custard, bananas, and wafers." },
+            { id: 55, title: "Fried Chicken", region: "Americas", cost: 4.00, price: 19.50, desc: "Crisp buttermilk fried chicken." },
+            { id: 56, title: "Gumbo", region: "Americas", cost: 6.20, price: 26.00, desc: "Creole stew with sausage and seafood." },
+            { id: 57, title: "Jambalaya", region: "Americas", cost: 5.80, price: 24.50, desc: "One-pot Cajun rice dish." },
+            { id: 58, title: "Clam Chowder", region: "Americas", cost: 4.50, price: 18.00, desc: "Creamy clam and potato soup." },
+            { id: 59, title: "Key Lime Pie", region: "Americas", cost: 2.90, price: 14.00, desc: "Tart lime custard pie." },
+            { id: 60, title: "Cornbread", region: "Americas", cost: 1.10, price: 7.50, desc: "Golden buttermilk cornbread." },
+            { id: 61, title: "Ceviche", region: "Americas", cost: 6.80, price: 29.00, desc: "Citrus-cured fish with chilies." },
+            { id: 62, title: "Feijoada", region: "Americas", cost: 7.00, price: 32.00, desc: "Brazilian black bean and pork stew." },
+            { id: 63, title: "Moqueca", region: "Americas", cost: 7.50, price: 33.50, desc: "Brazilian seafood stew with coconut milk." },
+            { id: 64, title: "Arepas", region: "Americas", cost: 1.80, price: 11.00, desc: "Cornmeal cakes filled with savory meat or cheese." },
+            { id: 65, title: "Tamales", region: "Americas", cost: 2.60, price: 14.50, desc: "Corn masa steamed in husks." },
+            { id: 66, title: "Empanadas", region: "Americas", cost: 2.00, price: 12.00, desc: "Baked pastry turnovers with seasoned filling." },
+            { id: 67, title: "Pierogi", region: "European", cost: 2.20, price: 14.00, desc: "Dumplings filled with potato and cheese." },
+            { id: 68, title: "Borscht", region: "European", cost: 2.50, price: 15.00, desc: "Beet soup with sour cream." },
+            { id: 69, title: "Sauerbraten", region: "European", cost: 7.20, price: 31.00, desc: "German pot roast in vinegar marinade." },
+            { id: 70, title: "Schnitzel", region: "European", cost: 4.80, price: 22.50, desc: "Breaded pork cutlet fried crisp." },
+            { id: 71, title: "Goulash", region: "European", cost: 4.90, price: 21.00, desc: "Hungarian beef stew with paprika." },
+            { id: 72, title: "Kaiserschmarrn", region: "European", cost: 2.60, price: 13.50, desc: "Shredded caramelized pancake dessert." },
+            { id: 73, title: "Moussaka", region: "European", cost: 5.20, price: 24.00, desc: "Layered eggplant and lamb bake." },
+            { id: 74, title: "Greek Salad", region: "European", cost: 3.00, price: 15.50, desc: "Cucumber, tomato, olive, and feta salad." },
+            { id: 75, title: "Souvlaki", region: "European", cost: 3.80, price: 17.50, desc: "Grilled meat skewers with lemon and herbs." },
+            { id: 76, title: "Coq au Vin Blanc", region: "European", cost: 7.60, price: 34.50, desc: "Chicken braised in white wine with mushrooms." },
+            { id: 77, title: "Falafel", region: "Middle East & Africa", cost: 1.60, price: 10.50, desc: "Crisp chickpea fritters with spices." },
+            { id: 78, title: "Hummus", region: "Middle East & Africa", cost: 1.40, price: 9.50, desc: "Creamy chickpea and tahini dip." },
+            { id: 79, title: "Shawarma", region: "Middle East & Africa", cost: 3.50, price: 16.00, desc: "Spiced meat shaved from a rotating spit." },
+            { id: 80, title: "Tabbouleh", region: "Middle East & Africa", cost: 1.90, price: 11.50, desc: "Parsley and bulgur salad with lemon." },
+            { id: 81, title: "Safiha", region: "Middle East & Africa", cost: 2.20, price: 13.00, desc: "Open-faced meat pies." },
+            { id: 82, title: "Musakhan", region: "Middle East & Africa", cost: 5.10, price: 23.00, desc: "Sumac chicken over bread and onions." },
+            { id: 83, title: "Couscous", region: "Middle East & Africa", cost: 3.00, price: 16.50, desc: "Steamed semolina with vegetables and lamb." },
+            { id: 84, title: "Tagine", region: "Middle East & Africa", cost: 5.60, price: 25.00, desc: "Slow-cooked stew in a clay vessel." },
+            { id: 85, title: "Paella", region: "European", cost: 7.90, price: 36.00, desc: "Saffron rice with seafood and shellfish." },
+            { id: 86, title: "Gazpacho", region: "European", cost: 2.10, price: 12.00, desc: "Chilled tomato soup with peppers and cucumber." },
+            { id: 87, title: "Churros", region: "European", cost: 1.30, price: 9.00, desc: "Crisp fried dough with cinnamon sugar." },
+            { id: 88, title: "Tortilla Española", region: "European", cost: 2.00, price: 12.50, desc: "Spanish omelette with potato and onion." },
+            { id: 89, title: "Sushi Burrito", region: "Americas", cost: 5.00, price: 19.00, desc: "Oversized sushi hand roll with tuna and avocado." },
+            { id: 90, title: "Baked Feta Pasta", region: "European", cost: 3.40, price: 17.00, desc: "Roasted feta and tomatoes tossed with pasta." },
+            { id: 91, title: "Peking Duck", region: "Asian", cost: 12.50, price: 55.00, desc: "Crisp-skinned duck with pancakes and hoisin." },
+            { id: 92, title: "Dim Sum", region: "Asian", cost: 4.50, price: 22.00, desc: "Steamed and fried bite-sized delicacies." },
+            { id: 93, title: "Hot Pot", region: "Asian", cost: 8.00, price: 38.00, desc: "Communal simmering broth with thin meats and vegetables." },
+            { id: 94, title: "Sweet and Sour Pork", region: "Asian", cost: 3.60, price: 17.50, desc: "Crispy pork with pineapple and peppers." },
+            { id: 95, title: "Kung Pao Chicken", region: "Asian", cost: 3.90, price: 18.00, desc: "Stir-fried chicken with chilies and peanuts." },
+            { id: 96, title: "Tom Yum Soup", region: "Asian", cost: 3.50, price: 17.00, desc: "Hot and sour Thai soup with lemongrass and prawns." },
+            { id: 97, title: "Massaman Curry", region: "Asian", cost: 4.40, price: 19.50, desc: "Thai curry with warm spices and potatoes." },
+            { id: 98, title: "Fish Curry in Mustard Sauce", region: "Asian", cost: 4.20, price: 20.00, desc: "Fish cooked in pungent mustard gravy." },
+            { id: 99, title: "Coxinha", region: "Americas", cost: 1.80, price: 11.00, desc: "Brazilian chicken croquettes." },
+            { id: 100, title: "Crème Brûlée", region: "European", cost: 2.50, price: 12.00, desc: "Vanilla custard with caramelized sugar crust." }
+        ];
+
+        let currentView = "dash";
+
+        function switchView(id) {
+            currentView = id;
+            document.querySelectorAll(".nav button").forEach(b => b.classList.remove("active"));
+            document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+            document.getElementById("nav-" + id).classList.add("active");
+            document.getElementById(id).classList.add("active");
+
+            if (id === "dash") {
+                pageTitle.textContent = "Master Operational Ledger";
+                pageDesc.textContent = "Live enterprise-grade analysis of culinary assets and financial performance.";
+            }
+            if (id === "yield") {
+                pageTitle.textContent = "Dynamic Yield Engine";
+                pageDesc.textContent = "Parameter-driven batch projections with scalable cost modeling.";
+                calcYield();
+            }
+            if (id === "supply") {
+                pageTitle.textContent = "Supply Chain Integrity Logs";
+                pageDesc.textContent = "Authenticated movement records with variance monitoring.";
+                renderSupply();
+            }
+            if (id === "margin") {
+                pageTitle.textContent = "Margin Optimization Lab";
+                pageDesc.textContent = "Executive profitability matrix ranked by gross margin.";
+                renderMatrix();
+            }
+        }
+
+        function marginOf(item) {
+            return ((item.price - item.cost) / item.price) * 100;
+        }
+
+        function renderLedger(list) {
+            const el = document.getElementById("ledger");
+            el.innerHTML = "";
+            if (!list.length) {
+                el.innerHTML = `<div class="empty">No assets match the current filters.</div>`;
+                return;
+            }
+            document.getElementById("avgMargin").textContent = (list.reduce((a, b) => a + marginOf(b), 0) / list.length).toFixed(1) + "%";
+
+            list.forEach(item => {
+                const card = document.createElement("article");
+                card.className = "item";
+                card.innerHTML = `
+                    <div class="thumb"><img src="${pool[item.id % pool.length]}" alt="${item.title}"></div>
+                    <div>
+                        <div class="meta">
+                            <div>
+                                <span class="tag">${item.region} // ID ${String(item.id).padStart(3, "0")}</span>
+                                <h4>${item.title}</h4>
+                            </div>
+                        </div>
+                        <p>${item.desc}</p>
+                        <div class="pill">
+                            <span>Cost: <strong>$${item.cost.toFixed(2)}</strong></span>
+                            <span>Price: <strong>$${item.price.toFixed(2)}</strong></span>
+                            <span>Margin: <strong class="pill-margin">${marginOf(item).toFixed(1)}%</strong></span>
+                        </div>
+                    </div>
+                `;
+                el.appendChild(card);
+            });
+        }
+
+        function filterLedger() {
+            const q = document.getElementById("search").value.toLowerCase();
+            const region = document.getElementById("region").value;
+            renderLedger(data.filter(x => (region === "ALL" || x.region === region) && (x.title.toLowerCase().includes(q) || x.desc.toLowerCase().includes(q))));
+        }
+
+        function renderTickers() {
+            const t = document.getElementById("tickers");
+            const items = ["Southeast Paddy Rice Index", "Atlantic Halibut Futures", "Modena Balsamic Reserve Pool", "Oaxaca Maize Allotments"];
+            t.innerHTML = "";
+            items.forEach(name => {
+                const change = (Math.random() * 4.4 - 2.2).toFixed(2);
+                const up = Number(change) >= 0;
+                const row = document.createElement("div");
+                row.className = "ticker";
+                row.innerHTML = `<span style="color:var(--muted)">${name}</span><strong style="color:${up ? 'var(--emerald)' : 'var(--crimson)'}">${up ? "▲" : "▼"} ${Math.abs(change)}%</strong>`;
+                t.appendChild(row);
+            });
+        }
+
+        function calcYield() {
+            const covers = +document.getElementById("covers").value;
+            const waste = +document.getElementById("waste").value;
+            document.getElementById("coversLabel").textContent = covers;
+            document.getElementById("wasteLabel").textContent = waste + "%";
+
+            const out = document.getElementById("yieldOut");
+            out.innerHTML = "";
+            data.slice(0, 8).forEach(item => {
+                const scaled = item.cost * covers * (1 + waste / 100) * 0.12;
+                out.insertAdjacentHTML("beforeend", `
+                    <tr>
+                        <td><strong>${item.title}</strong></td>
+                        <td>${item.region}</td>
+                        <td>$${item.cost.toFixed(2)}</td>
+                        <td class="yield-projection">$${scaled.toFixed(2)}</td>
+                    </tr>
+                `);
+            });
+        }
+
+        function renderSupply() {
+            const out = document.getElementById("supplyOut");
+            out.innerHTML = "";
+            data.slice(10, 25).forEach(item => {
+                const variance = (Math.random() * 2.8 - 1.2).toFixed(2);
+                const ok = Number(variance) <= 1.2;
+                out.insertAdjacentHTML("beforeend", `
+                    <tr>
+                        <td class="supply-ref">0x${(2048 + item.id * 73).toString(16).toUpperCase()}</td>
+                        <td><strong>${item.title}</strong></td>
+                        <td>${item.region} Hub</td>
+                        <td><span class="status ${ok ? "ok" : "warn"}">${ok ? "PASSED CHECK" : "IN TRANSIT"}</span></td>
+                        <td style="font-family:ui-monospace,monospace;color:${Number(variance) > 0 ? 'var(--crimson)' : 'var(--emerald)'}">${Number(variance) > 0 ? "+" : ""}${variance}%</td>
+                    </tr>
+                `);
+            });
+        }
+
+        function renderMatrix() {
+            const out = document.getElementById("matrix");
+            out.innerHTML = "";
+            [...data]
+                .map(x => ({ ...x, m: marginOf(x) }))
+                .sort((a, b) => b.m - a.m)
+                .slice(0, 12)
+                .forEach(item => {
+                    out.insertAdjacentHTML("beforeend", `
+                        <div class="mcard">
+                            <span class="mcard-label">Asset #${item.id}</span>
+                            <h4>${item.title}</h4>
+                            <div class="mval">${item.m.toFixed(1)}%</div>
+                            <div class="bar"><div style="width:${Math.max(0, Math.min(100, item.m))}%"></div></div>
+                        </div>
+                    `);
+                });
+        }
+
+        function refreshView() {
+            if (currentView === "dash") filterLedger();
+            if (currentView === "yield") calcYield();
+            if (currentView === "supply") renderSupply();
+            if (currentView === "margin") renderMatrix();
+            renderTickers();
+        }
+
+        function tick() {
+            document.getElementById("clock").textContent = new Date().toLocaleTimeString();
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            filterLedger();
+            renderTickers();
+            calcYield();
+            tick();
+            setInterval(tick, 1000);
+            setInterval(renderTickers, 5000);
+            switchView("dash");
+        });
+    </script>
+</body>
+
+</html>
